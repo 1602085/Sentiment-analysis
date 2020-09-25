@@ -34,7 +34,20 @@ x_train = cv.fit_transform(g) # learn vocabulary and idf from training set
 
 fe1 = x_train.toarray()
 fe = fe1.tolist()
+sample, feature = fe1.shape
 
+def perceptron(feature_matrix, label, T=50):
+    theta = np.zeros(feature)
+    theta0 = 0
+    for t in range(T):
+        for i in range(sample):
+            if label[i]*(np.dot(feature_matrix[i], theta) + theta0) <= 0:
+                theta += label[i] * feature_matrix[i]
+                theta0 += label[i]
+    return theta, theta0
+
+label = np.array(q)
+theta, theta0 = perceptron(fe1, label, T=50)
 
 df1 = pd.read_csv(r'/home/shikha/Downloads/reviews_test.csv', error_bad_lines=False, sep='delimiter', header=None, engine='python')
 print(df1.head())
@@ -59,7 +72,9 @@ for f in b:
 cv1 = TfidfVectorizer(min_df=1, stop_words='english')
 x_test = cv1.fit_transform(a)
 fe2 = x_test.toarray()
-fee = fe2.tolist()
+fe3 = np.zeros([500, 8815])
+fe4 = np.concatenate([fe2, fe3], axis=1)
+fee = fe4.tolist()
 
 
 clf = MLPClassifier(hidden_layer_sizes = (100, 50, 50, 2), max_iter = 400)  # neural network for classification
@@ -68,21 +83,25 @@ trained = clf.fit(fe, q) # fit the vocabulary and sentiment
 res = trained.predict(fee) # predict on test data 
 res =  res.tolist()   
 
-print(res)
+sample1, feature1 = fe4.shape
+label1 = np.array(c)
 
-total=0
-for i in range(len(c)):
-    total += c[i]  
+def classify(feature_matrix1, theta, theta0):
+    predictions = np.zeros(sample1)
+    for i in range(sample1):
+        prediction = np.dot(theta, feature_matrix1[i]) + theta0
+        if (prediction > 0):
+            predictons[i] = 1
+        else:
+            predictions[i] = -1
+    return predictions
 
-def accuracy(c, res):
-    pred = 0
-    for i in range(len(c)):
-        if c[i] == res[i]:
-           pred += c[i]
-    accur = pred / total
-    return accur
+res1 = classify(fee, theta, theta0)
 
-score = accuracy(c, res) # calculate accuracy of system
+def accuracy(label1, res):
+    return (label1 == res).mean()
+
+score = accuracy(label1 res1) # calculate accuracy of system
 print(score)
 
 
