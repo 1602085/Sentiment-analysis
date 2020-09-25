@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.neural_network import MLPClassifier    # multilayer perceptron classifier, neural network for classification
 
 
-df = pd.read_csv(r'/home/shikha/Downloads/reviews_train.csv', error_bad_lines=False, sep='delimiter', header=None, engine='python')
+df = pd.read_csv('reviews_train.csv', error_bad_lines=False, sep='delimiter', header=None, engine='python')
 print(df.head())
 
 
@@ -49,7 +49,7 @@ def perceptron(feature_matrix, label, T=50):
 label = np.array(q)
 theta, theta0 = perceptron(fe1, label, T=50)
 
-df1 = pd.read_csv(r'/home/shikha/Downloads/reviews_test.csv', error_bad_lines=False, sep='delimiter', header=None, engine='python')
+df1 = pd.read_csv('reviews_test.csv', error_bad_lines=False, sep='delimiter', header=None, engine='python')
 print(df1.head())
 
 a=[]
